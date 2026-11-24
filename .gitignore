@@ -1,0 +1,19 @@
+# Secret dan konfigurasi lokal
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Workspace dan evidence lokal
+training-workspace/
+environment.txt
+evidence/
+transcript/
+
+# Artefak editor dan sistem operasi
+.DS_Store
+*.swp
+*~

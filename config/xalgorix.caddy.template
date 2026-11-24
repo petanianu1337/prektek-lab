@@ -1,0 +1,14 @@
+# Template dokumentasi. XALGORIX_SITE dapat berupa domain atau
+# :9443. Untuk mode IP, gunakan sertifikat self-signed dengan SAN IP sebagai
+# sertifikat default listener.
+# Installer membuat hash password pada runtime dan tidak menaruh password
+# mentah di Caddyfile.
+XALGORIX_SITE {
+  OPTIONAL_TLS_CERTIFICATE_AND_KEY
+  basicauth {
+    GATEWAY_USERNAME GATEWAY_PASSWORD_BCRYPT_HASH
+  }
+  reverse_proxy 127.0.0.1:9137 {
+    header_up -Authorization
+  }
+}

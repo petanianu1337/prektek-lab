@@ -1,0 +1,21 @@
+services:
+  xalgorix:
+    image: ${XALGORIX_IMAGE}
+    container_name: training-xalgorix
+    restart: unless-stopped
+    privileged: ${XALGORIX_CONTAINER_PRIVILEGED:-false}
+    environment:
+      XALGORIX_BIND: 0.0.0.0
+      XALGORIX_USERNAME: ${XALGORIX_USERNAME}
+      XALGORIX_PASSWORD: ${XALGORIX_PASSWORD}
+      XALGORIX_NO_AUTO_UPDATE: "1"
+      XALGORIX_ALLOW_LOCAL_TARGETS: "false"
+      XALGORIX_MAX_INSTANCES: "1"
+    ports:
+      - "127.0.0.1:9137:9137"
+    volumes:
+      - xalgorix-data:/data
+
+volumes:
+  xalgorix-data:
+    name: training-xalgorix-data
