@@ -72,6 +72,13 @@ installed_opencode="$($opencode_bin --version | awk 'NF {print $NF; exit}')"
 installed_opencode="${installed_opencode#v}"
 [[ "$installed_opencode" == "$OPENCODE_VERSION" ]] || die "Versi OpenCode tidak sesuai: $installed_opencode"
 
+opencode_launcher=/usr/local/bin/opencode
+[[ -x "$opencode_launcher" ]] || die "Launcher perintah opencode tidak ditemukan: $opencode_launcher"
+cmp --silent "$PRAKTEK_ROOT/lib/opencode-launcher" "$opencode_launcher" || die "Launcher perintah opencode tidak sesuai dengan installer."
+launcher_opencode="$($opencode_launcher --version | awk 'NF {print $NF; exit}')"
+launcher_opencode="${launcher_opencode#v}"
+[[ "$launcher_opencode" == "$OPENCODE_VERSION" ]] || die "Perintah opencode menjalankan versi yang tidak sesuai: $launcher_opencode"
+
 require_command git
 require_command curl
 require_command jq
@@ -150,8 +157,22 @@ if [[ "$INSTALL_PLAYWRIGHT" == "1" ]]; then
     opencode_path="$PRAKTEK_ROOT/lib/docker-shim:$PATH"
     run_root docker info >/dev/null
   fi
-  mcp_output="$(cd "$redteam_runtime" && PATH="$opencode_path" "$opencode_bin" mcp list 2>&1 || :)"
-  grep -qE '(^|[[:space:]])playwright([[:space:]]|$)' <<<"$mcp_output" || die "MCP Playwright tidak terdaftar."
+  mcp_output=""
+  mcp_status=0
+  for attempt in 1 2 3; do
+    if mcp_output="$(cd "$redteam_runtime" && PATH="$opencode_path" "$opencode_bin" mcp list 2>&1)"; then
+      mcp_status=0
+    else
+      mcp_status=$?
+    fi
+    if grep -qE '(^|[[:space:]])playwright([[:space:]]|$)' <<<"$mcp_output"; then
+      break
+    fi
+    if ((attempt < 3)); then
+      sleep 2
+    fi
+  done
+  grep -qE '(^|[[:space:]])playwright([[:space:]]|$)' <<<"$mcp_output" || die "MCP Playwright tidak terdaftar setelah tiga pemeriksaan (exit $mcp_status)."
   unset mcp_output
 fi
 

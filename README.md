@@ -22,7 +22,7 @@ cd prektek-lab
   --workspace "$HOME/training-workspace"
 ```
 
-Installer tidak meminta API key dan tidak menjalankan scan. Setelah instalasi, logout/login agar membership grup Docker aktif penuh. Xalgorix peserta tetap lokal pada `http://127.0.0.1:9137`; credential unik perangkat tersimpan dengan permission `0600` di `~/.config/praktek-lab/xalgorix.env`.
+Installer tidak meminta API key dan tidak menjalankan scan. Perintah `opencode` langsung tersedia melalui launcher `/usr/local/bin/opencode`; installer tidak mengubah file profile shell peserta. Logout/login tetap diperlukan agar membership grup Docker aktif penuh. Xalgorix peserta tetap lokal pada `http://127.0.0.1:9137`; credential unik perangkat tersimpan dengan permission `0600` di `~/.config/praktek-lab/xalgorix.env`.
 
 Jangan memasukkan target ke agent atau scanner sebelum instruktur menyampaikan scope dan `~/training-workspace/scope.env` sudah diisi serta disetujui.
 
@@ -59,8 +59,9 @@ praktek-lab/
 ├── versions.env
 ├── lib/
 │   ├── common.sh
-│   └── docker-shim/
-│       └── docker
+│   ├── docker-shim/
+│   │   └── docker
+│   └── opencode-launcher
 ├── installers/
 │   ├── 01-system.sh
 │   ├── 02-docker.sh

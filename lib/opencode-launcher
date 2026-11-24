@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+
+opencode_bin="$HOME/.opencode/bin/opencode"
+if [ ! -x "$opencode_bin" ]; then
+  printf 'OpenCode belum terpasang untuk user %s. Jalankan install.sh sebagai user tersebut.\n' "$(id -un)" >&2
+  exit 127
+fi
+
+exec "$opencode_bin" "$@"
